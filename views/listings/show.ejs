@@ -13,11 +13,11 @@
     />
 
     <div class="card-body">
+      <p class="card-text">Owned By: <i><%= listing.owner?.currUser ||"Mahesh" %></i></p>
       <p class="card-text"> <%= listing.description %></p>
-      <p class="card-text">Price: ₹<%= listing.price %></p>
+      <p class="card-text">Price: ₹<%= listing.price  %></p>
       <p class="card-text">Location: <%= listing.location %></p>
       <p class="card-text">Country: <%= listing.country %></p>
-
     </div>
   </div>
 
@@ -36,6 +36,7 @@
       </form>
 
     </div>
+
     <hr>
 <!-- Review Form -->
 <div class="col-8 offset-2 mb-3">
@@ -119,4 +120,4 @@
   <h3>Where you'll be</h3>
   <div id="map"></div>
   </div>
-</div>
+gib

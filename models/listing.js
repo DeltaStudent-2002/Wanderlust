@@ -18,6 +18,7 @@ const listingSchema = new Schema({
     url: String,
   },
   reviews: [{ type: Schema.Types.ObjectId, ref: "Review" }],
+  owner: { type: Schema.Types.ObjectId, ref: "User" },
 });
 
 module.exports = mongoose.model("Listing", listingSchema);
