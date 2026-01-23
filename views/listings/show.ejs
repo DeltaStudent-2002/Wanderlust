@@ -1,4 +1,8 @@
 <% layout("layouts/boilerplate") %>
+<script>
+  const mapToken = "<%= process.env.MAP_TOKEN%>"
+  const coordinates = "<%- JSON.stringify(listing.geometry.coordinates)%>"
+</script>
   <!-- Listing Title -->
   <div class="col-8 offset-2 mt-3">
     <h3><%= listing.title %></h3>
@@ -47,7 +51,7 @@
     <label class="form-label">Rating</label>
 
     <fieldset class="starability-slot">
-      <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="0" checked />
+      <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1" checked />
 
       <input type="radio" id="first-rate1" name="review[rating]" value="1" />
       <label for="first-rate1" title="Terrible">1 star</label>
@@ -93,12 +97,14 @@
       <div class="card col-5 ms-3 mb-3">
 
         <div class="card-body">
+          <h5 class="card-title">Review by <i><%= review.author?.username ||"Mahesh" %></i></h5>
           <p
             class="starability-result card-text"
             data-rating="<%= review.rating %>"
           ></p>
+            <p class="card-text"><%= review.comment %></p>
 
-          <p class="card-text"><%= review.comment %></p>
+        
 
         </div>
 
@@ -115,9 +121,11 @@
     
   </div>
   <% } %>
-  </div> 
-  <div class="col-6 offset-3 mb-3">
-  <h3>Where you'll be</h3>
-  <div id="map"></div>
-  </div>
-gib
+</div> 
+<hr>
+<div class="col-6 offset-3 mb-3">
+<h3>Where you'll be</h3>
+<div id="map"></div>
+</div>
+  
+<script src="/js/map.js"></script>

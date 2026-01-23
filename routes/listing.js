@@ -7,6 +7,10 @@ const { isLoggedIn, isOwner } = require("../middleware");
 
 const listingController = require("../controllers/listing");
 
+const multer = require("multer");
+const { storage } = require("../cloudconfig.js");
+const upload = multer({ storage });
+
 // Validation middleware
 const validateListing = (req, res, next) => {
   const { error } = listingSchema.validate(req.body);
@@ -17,39 +21,35 @@ const validateListing = (req, res, next) => {
   next();
 };
 
-// INDEX
-router.get("/", wrapAsync(listingController.index));
-
 // NEW
 router.get("/new", isLoggedIn, listingController.renderNewForm);
+
+// INDEX + CREATE
+router.route("/")
+  .get(wrapAsync(listingController.index))
+  .post(
+    isLoggedIn,
+    upload.single("listing[image]"),
+    validateListing,
+    wrapAsync(listingController.createListing)
+  );
 
 // SHOW
 router.get("/:id", wrapAsync(listingController.showListing));
 
-// CREATE
-router.post(
-  "/",
-  isLoggedIn,
-  validateListing,
-  wrapAsync(listingController.createListing)
-);
-
 // EDIT
-router.get(
-  "/:id/edit",
-  isLoggedIn,
-  wrapAsync(listingController.renderEditForm)
-);
+router.get("/:id/edit", isLoggedIn, wrapAsync(listingController.renderEditForm));
 
 // UPDATE
 router.put(
   "/:id",
   isLoggedIn,
+  upload.single("listing[image]"),
   validateListing,
   wrapAsync(listingController.updateListing)
 );
 
-// DELETE
+// DELETE  ✅ FIXED
 router.delete(
   "/:id",
   isLoggedIn,

@@ -1,9 +1,17 @@
+if(process.env.NODE_ENV != "production"){
+  require("dotenv").config();
+}
+console.log(process.env.SECRET);
+
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const Listing = require("./models/listing.js"); // adjust if needed
 const path = require("path");
-const Mongo_Url = "mongodb://127.0.0.1:27017/wanderlust";
+
+
+const dbUrl = process.env.ATLASDB_URL;
+
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 const passport = require("passport");
@@ -11,6 +19,7 @@ const LocalStrategy = require("passport-local").Strategy;
 const User = require("./models/user.js");
 
 const session = require("express-session");
+const MongoStore = require('connect-mongo');
 const flash = require("connect-flash");
 
 const listingRouter = require("./routes/listing.js");
@@ -18,7 +27,7 @@ const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
 
 mongoose
-  .connect(Mongo_Url)
+  .connect(dbUrl)
   .then(() => console.log("✅ Connected to MongoDB"))
   .catch((err) => console.log("❌ MongoDB error:", err));
 
@@ -29,8 +38,17 @@ app.use(methodOverride("_method"));
 app.engine("ejs", ejsMate);
 app.use(express.static(path.join(__dirname, "/public")));
 
+
+const store = MongoStore.create({
+  mongoUrl: dbUrl,
+  secret: process.env.SECRET,
+  touchAfter: 24 * 3600,
+});
+
+
 const sessionOptions = {
-  secret: "mysupersecretcode",
+  store,
+  secret: process.env.SECRET,
   resave: false,
   saveUninitialized: true,
   cookie: {
@@ -63,6 +81,7 @@ app.use((req, res, next) => {
 app.get("/", (req, res) => {
   res.send("Hello World");
 });
+
 
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);

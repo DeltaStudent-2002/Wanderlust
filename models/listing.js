@@ -14,8 +14,19 @@ const listingSchema = new Schema({
   location: String,
   country: String,
   image: {
-    filename: String,
     url: String,
+    filename: String,
+  },
+  geometry: {
+    type: {
+      type: String,
+      enum: ["Point"],
+      required: true
+    },
+    coordinates: {
+      type: [Number],
+      required: true
+    }
   },
   reviews: [{ type: Schema.Types.ObjectId, ref: "Review" }],
   owner: { type: Schema.Types.ObjectId, ref: "User" },
