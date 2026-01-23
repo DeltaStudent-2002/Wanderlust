@@ -11,7 +11,6 @@ const path = require("path");
 
 
 const dbUrl = process.env.ATLASDB_URL;
-
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 const passport = require("passport");
